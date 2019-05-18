@@ -1,0 +1,61 @@
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+app.config['SQLALCHEMY_DATABASE_URI'] = '_sqlite:/site.db'#create a relative path from the current file
+
+#create an instance of the database
+db = SQLAlchemy(app)
+
+#create a model for a table
+class User(db.Model):
+	#follows the structure of column name = db.column( db.type , conditions )
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    #post attribute has a relationship with the Post model
+    #backref allows us to get the user who created by using the author attribute of the post
+    #lazy = True allows SQLAlchemy to load all the data in one go
+    #just runs an additonal query in the background 
+    #referencing the actual Post class
+    posts = db.relationship('Post', backref='author', lazy=True)
+
+    #method used to print out the user object when it is printed
+    #method to represent the specific user object
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)#date and time of a specific action
+    content = db.Column(db.Text, nullable=False)
+    #referencing the tablename , by default it will be lowercase modelname
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}')"
+
+
+
+#check the database out in the python console
+from < name of the file where db was created > import  db
+#create database
+db.create_all()
+#import the models
+from < name of the file where db was created > import User , Post
+#create an instance of User
+user_1 = User(username = 'Yoga' , email = 'Yoga@2001.com' , password = password)
+#tell the databse to make a change
+db.session.add(user_1)
+#confirm the changes
+db.session.commit()  
+#query all instances of User
+User.query.all()     
+#query with a filter
+User.query.filter_by(username = 'Yoga').all()
+#get a user with an id
+User.query.get(1)
+#delete the tables 
+db.drop_all()
