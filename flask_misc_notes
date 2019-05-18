@@ -1,0 +1,20 @@
+#referencing urls for styles , scripts and routes
+href = "{{url_for(static,filename = 'main.css')}}"
+scr = "{{url_for(static,filename = 'main.js')}}"
+href = "{{url_for('routefunction')}}" 
+
+#run app in debug mode
+if __name__ == '__main__':
+	app.run(debug = True)
+
+#basic imports
+from flask import Flask	, render_template
+app = Flask(__name__)
+
+#basic routing functions(decorators)
+@app.route("/route" , methods = ['GET','POST']):
+def route():
+	return render_template('route.html',user = user)
+
+#secret key
+app.config['SECRET KEY'] = 'd7423b2e48b860e60cfd6bd9c77b96fe'	

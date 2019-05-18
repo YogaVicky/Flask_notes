@@ -1,0 +1,12 @@
+from flask_bcrypt import Bcrypt 
+bcrypt = Bcrypt()
+
+bcrypt.generate_password_hash('notes')
+hash = bcrypt.generate_password_hash('notes').decode(utf-8)
+#some password stored in variable hash
+
+bcrypt.check_password_hash(hash,'notes')
+#true
+bcrypt.check_password_hash(hash,'note')
+#false 
+
